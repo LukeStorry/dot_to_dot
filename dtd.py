@@ -1,5 +1,9 @@
 import Tkinter
 
+linewidth = 10
+oldx, oldy = None, None
+mb = "up"
+
 
 def choose_input(root):
     pass  # TODO
@@ -7,10 +11,6 @@ def choose_input(root):
 
 def initalise_dots(root):
     pass  # TODO
-
-
-oldx, oldy = None, None
-mb = "up"
 
 
 def initialise_canvas():
@@ -36,9 +36,11 @@ def mouse_button_release(event):
 
 def motion(event):
     if mb == "down":
-        global oldx, oldy
+        global oldx, oldy, linewidth
+
         if oldx is not None and oldy is not None:
-            event.widget.create_line(oldx, oldy, event.x, event.y, smooth=True)
+            event.widget.create_line(
+                oldx, oldy, event.x, event.y, width=linewidth, capstyle=Tkinter.ROUND)  # smooth = True)
         oldx, oldy = event.x, event.y
 
 
