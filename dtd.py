@@ -5,6 +5,7 @@ oldx, oldy = None, None
 mb = "up"
 list_of_dots = {(50, 50): False, (100, 100): False,
                 (100, 50): False, (50, 100): False, }
+canvas = None
 
 
 def choose_input():
@@ -15,11 +16,12 @@ def draw_dots(canvas):
     global list_of_dots, precision
     for (x, y) in list_of_dots:
         canvas.create_oval(x - precision, y - precision, x + precision,
-                           y + precision, fill="red")
+                           y + precision, fill="blue")
     pass  # TODO
 
 
 def initialise_canvas():
+    global canvas
     root = Tkinter.Tk()
     canvas = Tkinter.Canvas(root, bg="white", height=800, width=1000)
     # TODO: maybe need to re-draw to make exp more streamlined
@@ -54,20 +56,22 @@ def motion(event):
 
 
 def hit_pixel(x, y):
-    global list_of_dots, precision
+    global list_of_dots, precision, canvas
     print x, y
     for (i, j) in [(i, j) for i in range(x - precision, x + precision) for j in range(y - precision, y + precision)]:
         #print (i, j),
         if (i, j) in list_of_dots:
             print i, j, " hit"
+            canvas.create_oval(i - precision, j - precision,
+                               i + precision, j + precision, fill="red")
 
     pass  # TODO: add to hitlist?
 
 
 def main():
     initialise_canvas()
-    choose_input()
-    initalise_dots()
+# choose_input()
+    # initalise_dots()
 
 if __name__ == "__main__":
     main()
