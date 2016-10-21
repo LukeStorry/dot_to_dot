@@ -5,31 +5,33 @@ oldx, oldy = None, None
 mb = "up"
 list_of_dots = {(50, 50): False, (100, 100): False,
                 (100, 50): False, (50, 100): False, }
-canvas = None
+canvas, root = None, None
 
 
 def choose_input():
     pass  # TODO
 
 
-def draw_dots(canvas):
-    global list_of_dots, precision
+def draw_dots():
+    global list_of_dots, precision, canvas
     for (x, y) in list_of_dots:
         canvas.create_oval(x - precision, y - precision, x + precision,
                            y + precision, fill="blue")
-    pass  # TODO
+    canvas.pack()
 
 
 def initialise_canvas():
-    global canvas
+    global canvas, root
     root = Tkinter.Tk()
     canvas = Tkinter.Canvas(root, bg="white", height=800, width=1000)
-    # TODO: maybe need to re-draw to make exp more streamlined
-    draw_dots(canvas)
+    canvas.pack()
+
+
+def start_game():
+    global canvas, root
     canvas.bind("<Motion>", motion)
     canvas.bind("<ButtonPress-1>", mouse_button_press)
     canvas.bind("<ButtonRelease-1>", mouse_button_release)
-    canvas.pack()
     root.mainloop()
 
 
@@ -68,10 +70,20 @@ def hit_pixel(x, y):
     pass  # TODO: add to hitlist?
 
 
+def write_results_to_file():
+    with open("results.csv", "a") as myfile:
+        myfile.write("results_test")
+
+
 def main():
     initialise_canvas()
-# choose_input()
-    # initalise_dots()
+    print 1
+    draw_dots()
+    print 2
+    # choose_input() ?
+    start_game()
+    print 3
+    write_results_to_file()
 
 if __name__ == "__main__":
     main()
