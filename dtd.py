@@ -37,11 +37,11 @@ def motion(event):
 
 def hit_pixel(x, y):
     global dict_of_dots, precision, canvas
-    print x, y
-    for (i, j) in [(i, j) for i in range(x - precision, x + precision) for j in range(y - precision, y + precision)]:
+    # print x, y
+    for (i, j) in [(i, j) for i in range(x - 2 * precision, x + 2 * precision) for j in range(y - 2 * precision, y + 2 * precision)]:
         # print (i, j),
         if (i, j) in dict_of_dots:
-            print i, j, " hit"
+            # print i, j, " hit"
             canvas.create_oval(i - precision, j - precision,
                                i + precision, j + precision, fill="red")
 
@@ -154,9 +154,11 @@ def calculate_result():
     return (input_type, diagram_type, calculate_time_taken())
 
 
-def write_result(result):
-    with open("results.csv", "a") as myfile:
-        myfile.write(str(result))
+def append_to_csv(info, filename):
+    with open(filename, "a") as myfile:
+        for var in info:
+            myfile.write(str(var) + ",")
+        myfile.write("\n")
 
 
 def main():
@@ -173,7 +175,7 @@ def main():
 
     result = calculate_result()
     print result
-    write_result(result)
+    append_to_csv(result, "results.csv")
 
 if __name__ == "__main__":
     main()
