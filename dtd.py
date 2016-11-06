@@ -1,19 +1,26 @@
 import Tkinter
 import time
 
-precision = 5
-oldx, oldy = None, None
-mb = "up"
-canvas = None
-input_type = None
-diagram_type = None
-start_time = None
-dots_coords_lists = [[(50, 50), (100, 100), (100, 50), (50, 100)],  # TODO populate with diagram vertices
-                     [(150, 50), (100, 100), (100, 50), (50, 100)]]
 
-assert len(dots_coords_lists[0]) == len(dots_coords_lists[1])
-active_dots = [False] * len(dots_coords_lists[0])
-drawn_dots = [False] * len(dots_coords_lists[0])
+# I hate globals but tkinter callback functions get messy without them.
+precision, oldx, oldy, mb, canvas, input_type, diagram_type, start_time, dots_coords_lists, active_dots, drawn_dots = None, None, None, None, None, None, None, None, None, None, None
+
+
+def reset_globals():
+    global precision, oldx, oldy, mb, canvas, input_type, diagram_type, start_time, dots_coords_lists, active_dots, drawn_dots
+    precision = 5
+    oldx, oldy = None, None
+    mb = "up"
+    canvas = None
+    input_type = None
+    diagram_type = None
+    start_time = None
+    dots_coords_lists = [[(50, 50), (100, 100), (100, 50), (50, 100)],  # TODO populate with diagram vertices
+                         [(150, 50), (100, 100), (100, 50), (50, 100)]]
+
+    assert len(dots_coords_lists[0]) == len(dots_coords_lists[1])
+    active_dots = [False] * len(dots_coords_lists[0])
+    drawn_dots = [False] * len(dots_coords_lists[0])
 
 
 def input_t():
@@ -122,7 +129,7 @@ def motion(event):
         # print (event.x, event.y)
         if oldx is not None and oldy is not None:
             event.widget.create_line(
-                oldx, oldy, event.x, event.y, width=precision * 2, capstyle=Tkinter.ROUND)  # smooth = True)
+                oldx, oldy, event.x, event.y, width=precision * 2, capstyle=Tkinter.ROUND)
         hit_pixel(event.x, event.y)
         oldx, oldy = event.x, event.y
 
@@ -138,22 +145,24 @@ def hit_pixel(x, y):
         if ((x < dot_coords[0] + 2 * precision) and (x > dot_coords[0] - 2 * precision)) and ((y < dot_coords[1] + 2 * precision)and (y > dot_coords[1] - 2 * precision)):
             # TODO maybe replace with x-dotcoord + y-dot coord < preci *4?
             index = dots_coords_lists[diagram_type].index(dot_coords)
-            print index, dot_coords
-            if index == 0 or drawn_dots[index - 1]:
-                active_dots[index] = True
-                if active_dots[index - 1]:
-                    drawn_dots[index] = True
+            # print index, dot_coords
 
-            draw_oval(dot_coords[0], dot_coords[1], "black")
-            if index != len(dots_coords_lists[diagram_type]) - 1:
-                next_dot_coords = dots_coords_lists[diagram_type][index + 1]
-                draw_oval(next_dot_coords[0], next_dot_coords[1], "green")
+            # activate dot if previous is already drawn
+            if drawn_dots[index - 1] or index == 0:
+                active_dots[index] = True
+                # draw dot if previous active
+                if active_dots[index - 1] or index == 0:
+                    drawn_dots[index] = True
+                    draw_oval(dot_coords[0], dot_coords[1], "grey")
+                    # colour next dot
+                    if index != len(dots_coords_lists[diagram_type]) - 1:
+                        next_dot_coords = dots_coords_lists[diagram_type][index + 1]
+                        draw_oval(next_dot_coords[0], next_dot_coords[1], "green")
 
 
 def all_drawn():
     global drawn_dots
     for drawn in drawn_dots:
-        print drawn_dots
         if not drawn:
             return False
     return True
@@ -181,23 +190,23 @@ def append_to_csv(info, filename):
 
 
 def main():
-    global active_dots, drawn_dots
-    root = Tkinter.Tk()
-    root.bind('<Button-1>', raise_button)
-    choose_input(root)
-    choose_diagram(root)
-    draw_canvas(root)
-    draw_start_button(root)
-    while not all_drawn():
-        print active_dots, drawn_dots
-        root.update()
-        root.update_idletasks()
-        time.sleep(1)
+    while True:
+        reset_globals()
+        root = Tkinter.Tk()
+        root.bind('<Button-1>', raise_button)
+        choose_input(root)
+        choose_diagram(root)
+        draw_canvas(root)
+        draw_start_button(root)
+        while not all_drawn():
+            root.update()
+            root.update_idletasks()
 
-    result = calculate_result()
-    append_to_csv(result, "results.csv")
-    clear(root)
-    root.destroy()
+        result = calculate_result()
+        print result
+        append_to_csv(result, "results.csv")
+        clear(root)
+        root.destroy()
 
 if __name__ == "__main__":
     main()
