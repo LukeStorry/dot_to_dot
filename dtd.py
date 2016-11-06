@@ -5,9 +5,6 @@ precision = 5
 oldx, oldy = None, None
 mb = "up"
 canvas = None
-# No longer used
-dict_of_dots = None
-#-
 input_type = None
 diagram_type = None
 start_time = None
@@ -17,59 +14,6 @@ dots_coords_lists = [[(50, 50), (100, 100), (100, 50), (50, 100)],  # TODO popul
 assert len(dots_coords_lists[0]) == len(dots_coords_lists[1])
 active_dots = [False] * len(dots_coords_lists[0])
 drawn_dots = [False] * len(dots_coords_lists[0])
-
-
-def mouse_button_press(event):
-    global mb
-    mb = "down"
-
-
-def reset_active_dots():
-    global active_dots
-    for i in active_dots:
-        active_dots[i] = False
-
-
-def mouse_button_release(event):
-    global mb, oldx, oldy
-    mb = "up"
-    reset_active_dots()
-    oldx, oldy = None, None
-
-
-def motion(event):
-    if mb == "down":
-        global oldx, oldy, precision
-        #print (event.x, event.y)
-        if oldx is not None and oldy is not None:
-            event.widget.create_line(
-                oldx, oldy, event.x, event.y, width=precision * 2, capstyle=Tkinter.ROUND)  # smooth = True)
-        hit_pixel(event.x, event.y)
-        oldx, oldy = event.x, event.y
-
-
-def hit_pixel(x, y):
-    global drawn_dots, active_dots, precision
-    if diagram_type == "diagram1":
-        dots = dots_coords_lists[0]
-    else:
-        dots = dots_coords_lists[1]
-
-    for dot in dots:
-        if ((x < dot[0] + 2 * precision) and (x > dot[0] - 2 * precision)) and ((y < dot[1] + 2 * precision) and (y > dot[1] - 2 * precision)):
-            index = dots.index(dot)
-            if index == 0:
-                active_dots[0] = True
-                drawn_dots[0] = True
-            elif drawn_dots[index - 1] and active_dots[index - 1]:
-                active_dots[index] = True
-                drawn_dots[index] = True
-            elif index > 0 and drawn_dots[index - 1] == True:
-                active_dots[index] = True
-
-
-def update_dots_drawings():
-    pass  # TODO move code here
 
 
 def input_t():
@@ -82,14 +26,14 @@ def input_m():
     input_type = "mouse"
 
 
+def diagram_0():
+    global diagram_type
+    diagram_type = 0
+
+
 def diagram_1():
     global diagram_type
-    diagram_type = "diagram1"
-
-
-def diagram_2():
-    global diagram_type
-    diagram_type = "diagram2"
+    diagram_type = 1
 
 
 def start_timer():
@@ -117,9 +61,9 @@ def choose_input(root):
 
 def choose_diagram(root):
     global diagram_type, dict_of_dots, dots_coords_lists
-    Tkinter.Button(root, text='Diagram 1', command=diagram_1,
+    Tkinter.Button(root, text="Diagram 0", command=diagram_0,
                    relief=Tkinter.FLAT).pack()
-    Tkinter.Button(root, text='Diagram 2', command=diagram_2,
+    Tkinter.Button(root, text="Diagram 1", command=diagram_1,
                    relief=Tkinter.FLAT).pack()
     while diagram_type == None:
         root.update()
@@ -140,32 +84,11 @@ def draw_canvas(root):
 
 
 def draw_dots():
-    global drawn_dots, precision, canvas
-    next_node = False
-    dots = None
-    if diagram_type == "diagram1":
-        dots = dots_coords_lists[0]
-    else:
-        dots = dots_coords_lists[1]
-
-    i = 0
-
-    for (x, y) in dots:
-        # turn finished dots blue
-        if drawn_dots[i]:
-            canvas.create_oval(x - precision, y - precision, x + precision,
-                               y + precision, fill="blue")
-        elif next_node == False:
-            # Draw the pair that need to be connected as green
-            canvas.create_oval(x - precision, y - precision, x + precision, y + precision, fill="green")
-            canvas.create_oval(dots[i - 1][0] - precision, dots[i - 1][1] - precision, dots[i - 1]
-                               [0] + precision, dots[i - 1][1] + precision, fill="green")
-            next_node = True
-        else:
-            # unfinished dots draw as  red
-            canvas.create_oval(x - precision, y - precision, x + precision,
-                               y + precision, fill="red")
-        i = i + 1
+    global dots_coords_lists
+    for (x, y) in dots_coords_lists[diagram_type]:
+        draw_oval(x, y, "red")
+    first = dots_coords_lists[diagram_type][0]
+    draw_oval(first[0], first[1], "green")
 
 
 def draw_start_button(root):
@@ -175,10 +98,63 @@ def draw_start_button(root):
         root.update_idletasks()
 
 
+def mouse_button_press(event):
+    global mb
+    mb = "down"
+
+
+def reset_active_dots():
+    global active_dots
+    for i in active_dots:
+        active_dots[i] = False
+
+
+def mouse_button_release(event):
+    global mb, oldx, oldy
+    mb = "up"
+    reset_active_dots()
+    oldx, oldy = None, None
+
+
+def motion(event):
+    if mb == "down":
+        global oldx, oldy, precision
+        # print (event.x, event.y)
+        if oldx is not None and oldy is not None:
+            event.widget.create_line(
+                oldx, oldy, event.x, event.y, width=precision * 2, capstyle=Tkinter.ROUND)  # smooth = True)
+        hit_pixel(event.x, event.y)
+        oldx, oldy = event.x, event.y
+
+
+def draw_oval(x, y, fill):
+    global precision, canvas
+    canvas.create_oval(x - precision, y - precision, x + precision, y + precision, fill=fill)
+
+
+def hit_pixel(x, y):
+    global drawn_dots, active_dots, precision, dots_coords_lists, diagram_type
+    for dot_coords in dots_coords_lists[diagram_type]:
+        if ((x < dot_coords[0] + 2 * precision) and (x > dot_coords[0] - 2 * precision)) and ((y < dot_coords[1] + 2 * precision)and (y > dot_coords[1] - 2 * precision)):
+            # TODO maybe replace with x-dotcoord + y-dot coord < preci *4?
+            index = dots_coords_lists[diagram_type].index(dot_coords)
+            print index, dot_coords
+            if index == 0 or drawn_dots[index - 1]:
+                active_dots[index] = True
+                if active_dots[index - 1]:
+                    drawn_dots[index] = True
+
+            draw_oval(dot_coords[0], dot_coords[1], "black")
+            if index != len(dots_coords_lists[diagram_type]) - 1:
+                next_dot_coords = dots_coords_lists[diagram_type][index + 1]
+                draw_oval(next_dot_coords[0], next_dot_coords[1], "green")
+
+
 def all_drawn():
     global drawn_dots
-    for dot in drawn_dots:
-        if not dot:
+    for drawn in drawn_dots:
+        print drawn_dots
+        if not drawn:
             return False
     return True
 
@@ -205,6 +181,7 @@ def append_to_csv(info, filename):
 
 
 def main():
+    global active_dots, drawn_dots
     root = Tkinter.Tk()
     root.bind('<Button-1>', raise_button)
     choose_input(root)
@@ -212,9 +189,10 @@ def main():
     draw_canvas(root)
     draw_start_button(root)
     while not all_drawn():
+        print active_dots, drawn_dots
         root.update()
         root.update_idletasks()
-        time.sleep(0.1)
+        time.sleep(1)
 
     result = calculate_result()
     append_to_csv(result, "results.csv")
