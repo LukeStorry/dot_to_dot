@@ -5,6 +5,9 @@ import time
 # I hate globals but tkinter callback functions get messy without them.
 precision, oldx, oldy, mb, canvas, input_type, diagram_type, start_time, dots_coords_lists, active_dots, drawn_dots = None, None, None, None, None, None, None, None, None, None, None
 
+dots_coords_lists = [[(100, 50), (180, 50), (280, 50), (400, 50), (470, 50), (470, 120), (470, 240), (470, 360), (310, 370), (100, 370), (100, 240), (100, 140), (100, 60), (
+    170, 100), (280, 100), (420, 90), (380, 180), (320, 270), (270, 330), (200, 330), (250, 270), (290, 210), (340, 150), (290, 160), (180, 150), (160, 110)], [(0, 0)]]
+
 
 def reset_globals():
     global precision, oldx, oldy, mb, canvas, input_type, diagram_type, start_time, dots_coords_lists, active_dots, drawn_dots
@@ -15,10 +18,7 @@ def reset_globals():
     input_type = None
     diagram_type = None
     start_time = None
-    dots_coords_lists = [[(50, 50), (100, 100), (100, 50), (50, 100)],  # TODO populate with diagram vertices
-                         [(150, 50), (100, 100), (100, 50), (50, 100)]]
-
-    assert len(dots_coords_lists[0]) == len(dots_coords_lists[1])
+    # assert len(dots_coords_lists[0]) == len(dots_coords_lists[1])
     active_dots = [False] * len(dots_coords_lists[0])
     drawn_dots = [False] * len(dots_coords_lists[0])
 
@@ -81,7 +81,7 @@ def choose_diagram(root):
 
 def draw_canvas(root):
     global canvas, input_type
-    canvas = Tkinter.Canvas(root, bg="white", height=400, width=1000)
+    canvas = Tkinter.Canvas(root, bg="white", height=400, width=500)
 
     canvas.bind("<Motion>", motion)
     canvas.bind("<ButtonPress-1>", mouse_button_press)
@@ -124,14 +124,20 @@ def mouse_button_release(event):
 
 
 def motion(event):
+    # commented bits can be used to export a list of dots to contruct a diagram
+    import math
     if mb == "down":
         global oldx, oldy, precision
-        # print (event.x, event.y)
+        (x, y) = (str(int(math.ceil(event.x / 10.0)) * 10), str(int(math.ceil(event.y / 10.0)) * 10))
+        print x, y
+        # with open("dotslist.txt", "a") as myfile:
+        #myfile.write("(" + x + "," + y + "), ")
         if oldx is not None and oldy is not None:
             event.widget.create_line(
                 oldx, oldy, event.x, event.y, width=precision * 2, capstyle=Tkinter.ROUND)
         hit_pixel(event.x, event.y)
         oldx, oldy = event.x, event.y
+        # time.sleep(0.5)
 
 
 def draw_oval(x, y, fill):
