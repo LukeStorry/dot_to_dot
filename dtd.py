@@ -29,12 +29,11 @@ def set_global_vars():
     start_time = None
 
     vertices = [(100, 50), (180, 50), (280, 50), (400, 50), (470, 50), (470, 120), (470, 240), (470, 360), (310, 370), (100, 370), (100, 240), (100, 140), (100, 60), (
-        170, 100), (280, 100), (420, 90), (380, 180), (320, 270), (270, 330), (200, 330), (250, 270), (290, 210), (340, 150), (270, 150), (180, 150), (160, 110)]
+        170, 100), (280, 100), (420, 90), (380, 180), (320, 270), (270, 330), (200, 330), (270, 240), (340, 150), (270, 150), (180, 150), (160, 110)]
     dots_coords_lists = [[], []]
     for (x, y) in vertices:
         dots_coords_lists[0] += [(x, y)]
         dots_coords_lists[1] += [(y, x)]
-
     # assert len(dots_coords_lists[0]) == len(dots_coords_lists[1])
     active_dots = [False] * len(dots_coords_lists[0])
     drawn_dots = [False] * len(dots_coords_lists[0])
@@ -145,8 +144,8 @@ def hit_pixel(x, y):
         if abs(dot_coords[0] - x) + abs(dot_coords[1] - y) < precision * 2:
             index = dots_coords_lists[diagram_type].index(dot_coords)
 
-            # skip if previously hit
-            if drawn_dots[index]:
+            # skip if already passed over
+            if drawn_dots[index] and drawn_dots[index + 1]:
                 return ''
 
             if index == 0:
