@@ -60,10 +60,6 @@ def diagram_1():
     diagram_type = 1
 
 
-def flatten_button(event):
-    event.widget.config(relief=Tkinter.FLAT)
-
-
 def choose_input(root):
     global input_type
     Tkinter.Button(root, text='Trackpad', command=input_t).pack()
@@ -72,18 +68,16 @@ def choose_input(root):
         root.update()
         root.update_idletasks()
         time.sleep(0.1)
-    root.quit()
 
 
 def choose_diagram(root):
-    global diagram_type, dict_of_dots, dots_coords_lists
+    global diagram_type
     Tkinter.Button(root, text="Diagram 0", command=diagram_0).pack()
     Tkinter.Button(root, text="Diagram 1", command=diagram_1).pack()
     while diagram_type == None:
         root.update()
         root.update_idletasks()
         time.sleep(0.1)
-    root.quit()
 
 
 def draw_canvas(root):
@@ -148,7 +142,7 @@ def draw_oval(x, y, fill):
 def hit_pixel(x, y):
     global drawn_dots, active_dots, precision, dots_coords_lists, diagram_type
     for dot_coords in dots_coords_lists[diagram_type]:
-        if abs(dot_coords[0] - x) + abs(dot_coords[1] - y) < precision * 1.5:
+        if abs(dot_coords[0] - x) + abs(dot_coords[1] - y) < precision * 2:
             index = dots_coords_lists[diagram_type].index(dot_coords)
 
             # skip if previously hit
@@ -213,9 +207,12 @@ def main():
     while True:
         set_global_vars()
         root = Tkinter.Tk()
-        root.bind('<Button-1>', flatten_button)  # TODO remove?
+
         choose_input(root)
+        clear(root)
         choose_diagram(root)
+        clear(root)
+
         draw_canvas(root)
         while not all_drawn():
             root.update()
