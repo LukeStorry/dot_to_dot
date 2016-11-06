@@ -130,13 +130,13 @@ def mouse_button_release(event):
 
 def motion(event):
     # commented bits can be used to export a list of dots to contruct a diagram
-    #import math
+    # import math
     if mb == "down":
         global oldx, oldy, precision
-        #(x, y) = (str(int(math.ceil(event.x / 10.0)) * 10), str(int(math.ceil(event.y / 10.0)) * 10))
+        # (x, y) = (str(int(math.ceil(event.x / 10.0)) * 10), str(int(math.ceil(event.y / 10.0)) * 10))
         # print x, y
         # with open("dotslist.txt", "a") as myfile:
-        #myfile.write("(" + x + "," + y + "), ")
+        # myfile.write("(" + x + "," + y + "), ")
         if oldx is not None and oldy is not None:
             event.widget.create_line(
                 oldx, oldy, event.x, event.y, width=precision * 2, capstyle=Tkinter.ROUND)
@@ -153,10 +153,8 @@ def draw_oval(x, y, fill):
 def hit_pixel(x, y):
     global drawn_dots, active_dots, precision, dots_coords_lists, diagram_type
     for dot_coords in dots_coords_lists[diagram_type]:
-        if ((x < dot_coords[0] + 2 * precision) and (x > dot_coords[0] - 2 * precision)) and ((y < dot_coords[1] + 2 * precision)and (y > dot_coords[1] - 2 * precision)):
-            # TODO maybe replace with x-dotcoord + y-dot coord < preci *4?
+        if abs(dot_coords[0] - x) + abs(dot_coords[1] - y) < precision * 1.5:
             index = dots_coords_lists[diagram_type].index(dot_coords)
-            # print index, dot_coords
 
             # activate dot if previous is already drawn
             if drawn_dots[index - 1] or index == 0:
