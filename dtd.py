@@ -48,12 +48,6 @@ def diagram_1():
     diagram_type = 1
 
 
-def start_timer():
-    global start_time
-    print ("Timer started.")
-    start_time = time.clock()
-
-
 def raise_button(event):
     event.widget.config(relief=Tkinter.RAISED)
 
@@ -103,13 +97,6 @@ def draw_dots():
     draw_oval(first[0], first[1], "green")
 
 
-def draw_start_button(root):
-    Tkinter.Button(root, text='Start Timer', command=start_timer).pack()
-    while start_time == None:
-        root.update()
-        root.update_idletasks()
-
-
 def mouse_button_press(event):
     global mb
     mb = "down"
@@ -156,17 +143,25 @@ def hit_pixel(x, y):
         if abs(dot_coords[0] - x) + abs(dot_coords[1] - y) < precision * 1.5:
             index = dots_coords_lists[diagram_type].index(dot_coords)
 
+            # skip if previously hit
+            if drawn_dots[index]:
+                return ''
+
+            if index == 0:
+                start_timer()
+
             # activate dot if previous is already drawn
             if drawn_dots[index - 1] or index == 0:
                 active_dots[index] = True
-                # draw dot if previous active
-                if active_dots[index - 1] or index == 0:
-                    drawn_dots[index] = True
-                    draw_oval(dot_coords[0], dot_coords[1], "grey")
-                    # colour next dot
-                    if index != len(dots_coords_lists[diagram_type]) - 1:
-                        next_dot_coords = dots_coords_lists[diagram_type][index + 1]
-                        draw_oval(next_dot_coords[0], next_dot_coords[1], "green")
+
+            # draw dot if previous active & drawn
+            if (drawn_dots[index - 1] and active_dots[index - 1]) or index == 0:
+                draw_oval(dot_coords[0], dot_coords[1], "grey")
+                drawn_dots[index] = True
+                # if not last, colour next dot green
+                if index != len(dots_coords_lists[diagram_type]) - 1:
+                    next_dot_coords = dots_coords_lists[diagram_type][index + 1]
+                    draw_oval(next_dot_coords[0], next_dot_coords[1], "green")
 
 
 def all_drawn():
@@ -182,8 +177,16 @@ def clear(root):
         w.destroy()
 
 
+def start_timer():
+    global start_time
+    if start_time == None:
+        print ("Timer started.")
+        start_time = time.clock()
+
+
 def calculate_time_taken():
     global start_time
+    print ("Timer ended.")
     return time.clock() - start_time
 
 
@@ -206,7 +209,6 @@ def main():
         choose_input(root)
         choose_diagram(root)
         draw_canvas(root)
-        draw_start_button(root)
         while not all_drawn():
             root.update()
             root.update_idletasks()
