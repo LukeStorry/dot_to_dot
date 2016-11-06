@@ -1,3 +1,15 @@
+'''
+DotToDot Program created for a Human-Computer-Interaction experiment.
+
+A simple application to time drawing with different input devices.
+
+Packaged in one long file for ease of distribution.
+
+Written by Luke Storry with help from Ewam Stanley.
+
+'''
+
+
 import Tkinter
 import time
 
@@ -48,16 +60,14 @@ def diagram_1():
     diagram_type = 1
 
 
-def raise_button(event):
-    event.widget.config(relief=Tkinter.RAISED)
+def flatten_button(event):
+    event.widget.config(relief=Tkinter.FLAT)
 
 
 def choose_input(root):
     global input_type
-    Tkinter.Button(root, text='Trackpad', command=input_t,
-                   relief=Tkinter.FLAT).pack()
-    Tkinter.Button(root, text='Mouse', command=input_m,
-                   relief=Tkinter.FLAT).pack()
+    Tkinter.Button(root, text='Trackpad', command=input_t).pack()
+    Tkinter.Button(root, text='Mouse', command=input_m).pack()
     while input_type == None:
         root.update()
         root.update_idletasks()
@@ -67,10 +77,8 @@ def choose_input(root):
 
 def choose_diagram(root):
     global diagram_type, dict_of_dots, dots_coords_lists
-    Tkinter.Button(root, text="Diagram 0", command=diagram_0,
-                   relief=Tkinter.FLAT).pack()
-    Tkinter.Button(root, text="Diagram 1", command=diagram_1,
-                   relief=Tkinter.FLAT).pack()
+    Tkinter.Button(root, text="Diagram 0", command=diagram_0).pack()
+    Tkinter.Button(root, text="Diagram 1", command=diagram_1).pack()
     while diagram_type == None:
         root.update()
         root.update_idletasks()
@@ -205,7 +213,7 @@ def main():
     while True:
         set_global_vars()
         root = Tkinter.Tk()
-        root.bind('<Button-1>', raise_button)
+        root.bind('<Button-1>', flatten_button)  # TODO remove?
         choose_input(root)
         choose_diagram(root)
         draw_canvas(root)
