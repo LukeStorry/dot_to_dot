@@ -5,11 +5,8 @@ import time
 # I hate globals but tkinter callback functions get messy without them.
 precision, oldx, oldy, mb, canvas, input_type, diagram_type, start_time, dots_coords_lists, active_dots, drawn_dots = None, None, None, None, None, None, None, None, None, None, None
 
-dots_coords_lists = [[(100, 50), (180, 50), (280, 50), (400, 50), (470, 50), (470, 120), (470, 240), (470, 360), (310, 370), (100, 370), (100, 240), (100, 140), (100, 60), (
-    170, 100), (280, 100), (420, 90), (380, 180), (320, 270), (270, 330), (200, 330), (250, 270), (290, 210), (340, 150), (290, 160), (180, 150), (160, 110)], [(0, 0)]]
 
-
-def reset_globals():
+def set_global_vars():
     global precision, oldx, oldy, mb, canvas, input_type, diagram_type, start_time, dots_coords_lists, active_dots, drawn_dots
     precision = 5
     oldx, oldy = None, None
@@ -18,6 +15,14 @@ def reset_globals():
     input_type = None
     diagram_type = None
     start_time = None
+
+    vertices = [(100, 50), (180, 50), (280, 50), (400, 50), (470, 50), (470, 120), (470, 240), (470, 360), (310, 370), (100, 370), (100, 240), (100, 140), (100, 60), (
+        170, 100), (280, 100), (420, 90), (380, 180), (320, 270), (270, 330), (200, 330), (250, 270), (290, 210), (340, 150), (270, 150), (180, 150), (160, 110)]
+    dots_coords_lists = [[], []]
+    for (x, y) in vertices:
+        dots_coords_lists[0] += [(x, y)]
+        dots_coords_lists[1] += [(y, x)]
+
     # assert len(dots_coords_lists[0]) == len(dots_coords_lists[1])
     active_dots = [False] * len(dots_coords_lists[0])
     drawn_dots = [False] * len(dots_coords_lists[0])
@@ -81,7 +86,7 @@ def choose_diagram(root):
 
 def draw_canvas(root):
     global canvas, input_type
-    canvas = Tkinter.Canvas(root, bg="white", height=400, width=500)
+    canvas = Tkinter.Canvas(root, bg="white", height=500, width=500)
 
     canvas.bind("<Motion>", motion)
     canvas.bind("<ButtonPress-1>", mouse_button_press)
@@ -125,11 +130,11 @@ def mouse_button_release(event):
 
 def motion(event):
     # commented bits can be used to export a list of dots to contruct a diagram
-    import math
+    #import math
     if mb == "down":
         global oldx, oldy, precision
-        (x, y) = (str(int(math.ceil(event.x / 10.0)) * 10), str(int(math.ceil(event.y / 10.0)) * 10))
-        print x, y
+        #(x, y) = (str(int(math.ceil(event.x / 10.0)) * 10), str(int(math.ceil(event.y / 10.0)) * 10))
+        # print x, y
         # with open("dotslist.txt", "a") as myfile:
         #myfile.write("(" + x + "," + y + "), ")
         if oldx is not None and oldy is not None:
@@ -197,7 +202,7 @@ def append_to_csv(info, filename):
 
 def main():
     while True:
-        reset_globals()
+        set_global_vars()
         root = Tkinter.Tk()
         root.bind('<Button-1>', raise_button)
         choose_input(root)
