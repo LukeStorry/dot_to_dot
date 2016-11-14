@@ -1,17 +1,17 @@
+
 Time,Input Type,Diagram Type,Time Taken
-Time,Input Type,Diagram Type,Time Taken
-11:18:02 11/14/16 GMT Standard Time,mouse,0,15.79370504
-11:18:31 11/14/16 GMT Standard Time,track,1,19.5593629
-11:19:43 11/14/16 GMT Standard Time,track,0,20.00753652
-11:20:14 11/14/16 GMT Standard Time,mouse,1,22.39948622
-11:20:54 11/14/16 GMT Standard Time,mouse,1,18.75429941
-11:21:25 11/14/16 GMT Standard Time,track,0,20.86469239
-11:22:09 11/14/16 GMT Standard Time,mouse,1,19.6335213
-11:22:59 11/14/16 GMT Standard Time,track,0,21.89389722
-11:24:26 11/14/16 GMT Standard Time,track,0,22.6046881
-11:24:53 11/14/16 GMT Standard Time,mouse,1,17.79379271
-11:25:45 11/14/16 GMT Standard Time,mouse,1,16.3937313
-11:26:23 11/14/16 GMT Standard Time,track,0,23.02502795
+11:18:02 11/14/16 GMT Standard Time,mouse,0,15.79370504,
+11:18:31 11/14/16 GMT Standard Time,track,1,19.5593629,
+11:19:43 11/14/16 GMT Standard Time,track,0,20.00753652,
+11:20:14 11/14/16 GMT Standard Time,mouse,1,22.39948622,
+11:20:54 11/14/16 GMT Standard Time,mouse,1,18.75429941,
+11:21:25 11/14/16 GMT Standard Time,track,0,20.86469239,
+11:22:09 11/14/16 GMT Standard Time,mouse,1,19.6335213,
+11:22:59 11/14/16 GMT Standard Time,track,0,21.89389722,
+11:24:26 11/14/16 GMT Standard Time,track,0,22.6046881,
+11:24:53 11/14/16 GMT Standard Time,mouse,1,17.79379271,
+11:25:45 11/14/16 GMT Standard Time,mouse,1,16.3937313,
+11:26:23 11/14/16 GMT Standard Time,track,0,23.02502795,
 11:31:04 11/14/16 GMT Standard Time,track,1,21.0524392028,
 11:31:31 11/14/16 GMT Standard Time,mouse,0,17.5860069468,
 11:32:37 11/14/16 GMT Standard Time,mouse,0,17.0181205006,
