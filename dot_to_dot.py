@@ -192,7 +192,7 @@ def calculate_time_taken():
 
 
 def calculate_result():
-    return (input_type, diagram_type, calculate_time_taken())
+    return (time.clock(), input_type, diagram_type, calculate_time_taken())
 
 
 def append_to_csv(info, filename):
@@ -203,6 +203,8 @@ def append_to_csv(info, filename):
 
 
 def main():
+    append_to_csv(("Time", "Input Type", "Diagram Type", "Time Taken"))
+    
     while True:
         set_global_vars()
         root = Tkinter.Tk()
