@@ -203,7 +203,7 @@ def append_to_csv(info, filename):
 
 
 def main():
-    append_to_csv(("Time", "Input Type", "Diagram Type", "Time Taken"))
+    append_to_csv(("Time", "Input Type", "Diagram Type", "Time Taken"), "results.csv")
     
     while True:
         set_global_vars()
