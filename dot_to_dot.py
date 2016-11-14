@@ -12,6 +12,7 @@ Written by Luke Storry with help from Ewam Stanley.
 
 import Tkinter
 import time
+import datetime
 
 
 # I hate globals but tkinter callback functions get messy without them.
@@ -192,7 +193,7 @@ def calculate_time_taken():
 
 
 def calculate_result():
-    return (time.clock(), input_type, diagram_type, calculate_time_taken())
+    return (datetime.utcfromtimestamp(timestamp), input_type, diagram_type, calculate_time_taken())
 
 
 def append_to_csv(info, filename):
